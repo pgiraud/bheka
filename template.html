@@ -33,7 +33,7 @@
     </div>
 </div>
 <div class="row skeleton"> <!-- Start Skeleton Row-->
-    <div class="col-md-6"><!-- Start of Photo DIV (column) -->
+    <div class="col-md-6 text-right"><!-- Start of Photo DIV (column) -->
         <a id="photo-link" href="#">
             <img id="photo" src="http://i.imgur.com/GeHxzb7.png" style="max-width=100%">
         </a>
@@ -100,7 +100,7 @@ pybossa.taskLoaded(function(task, deferred) {
             // continue as soon as the image is loaded
             deferred.resolve(task);
         });
-        var key = quadKey([task.info.z, task.info.x, task.info.y]);
+        var key = quadKey([task.info.z, task.info.x, -task.info.y - 1]);
         var url = "https://ecn.t2.tiles.virtualearth.net/tiles/a";
         url += key + '.jpeg?g=3643';
         img.attr('src', url).css('width', 512);
