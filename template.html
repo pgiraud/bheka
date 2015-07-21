@@ -178,6 +178,7 @@ pybossa.taskLoaded(function(task, deferred) {
 });
 
 pybossa.presentTask(function(task, deferred) {
+    console.log ($.isEmptyObject(task));
     if ( !$.isEmptyObject(task) ) {
         loadUserProgress();
         i18n_translate();
@@ -205,6 +206,7 @@ pybossa.presentTask(function(task, deferred) {
         $("#loading").hide();
     }
     else {
+        console.log("finish");
         $(".skeleton").hide();
         $("#loading").hide();
         $("#finish").fadeIn(500);
