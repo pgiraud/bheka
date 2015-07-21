@@ -28,16 +28,39 @@
     task.
 -->
 <div class="row skeleton"> <!-- Start Skeleton Row-->
+    <div class="col-md-12">
+        <h1 id="question"><span id="i18n_question">Do you see a <strong>settlement</strong> or <strong>road</strong> in this image?</span></h1> <!-- The question will be loaded here -->
+    </div>
+</div>
+<div class="row skeleton"> <!-- Start Skeleton Row-->
+    <div class="col-md-6"><!-- Start of Photo DIV (column) -->
+        <a id="photo-link" href="#">
+            <img id="photo" src="http://i.imgur.com/GeHxzb7.png" style="max-width=100%">
+        </a>
+    </div><!-- End of Photo DIV (columnt) -->
     <div class="col-md-6 "><!-- Start of Question and Submission DIV (column) -->
-        <h1 id="question"><span id="i18n_question">Do you see a human face in this photo?</span></h1> <!-- The question will be loaded here -->
         <div id="answer"> <!-- Start DIV for the submission buttons -->
-            <!-- If the user clicks this button, the saved answer will be value="yes"-->
-            <button class="btn btn-success btn-answer" value='Yes'><i class="fa fa-thumbs-o-up"></i>Yes</button>
-            <!-- If the user clicks this button, the saved answer will be value="no"-->
-            <button class="btn btn-danger btn-answer" value='No'><i class="fa fa-thumbs-o-down"></i> No</button>
-            <!-- If the user clicks this button, the saved answer will be value="NoPhoto"-->
-            <button class="btn btn-answer" value='Bad'><i class="fa fa-exclamation"></i>No or Bad imagery</button>
+            <p>
+                <!-- If the user clicks this button, the saved answer will be value="yes"-->
+                <button id="submit-yes" class="form-input btn btn-success btn-answer" value='Yes'><i class="fa fa-check hidden"></i> <i class="fa fa-thumbs-o-up"></i>Yes [↑]</button>
+            </p>
+            <p>
+                <!-- If the user clicks this button, the saved answer will be value="no"-->
+                <button id="submit-no" class="form-input btn btn-danger btn-answer" value='No'><i class="fa fa-check hidden"></i> <i class="fa fa-thumbs-o-down"></i> No [↓]</button>
+            </p>
+            <p>
+                <!-- If the user clicks this button, the saved answer will be value="NoPhoto"-->
+                <button id="submit-bad" class="form-input btn btn-answer" value='Bad'><i class="fa fa-check hidden"></i> <i class="fa fa-exclamation"></i>Imagery is bad [space]</button>
+            </p>
         </div><!-- End of DIV for the submission buttons -->
+    </div><!-- End of Question and Submission DIV (column) -->
+</div>
+<div class="row">
+    <a class="pull-right btn btn-primary btn-large" href="../tutorial"><i class="icon-question-sign"></i> Help</a>
+</div>
+<hr>
+<div class="row">
+    <div class="col-md-4">
         <!-- Feedback items for the user -->
         <p><span id="i18n_working_task">You are working now on task:</span> <span id="task-id" class="label label-warning">#</span></p>
         <p><span id="i18n_tasks_completed">You have completed:</span> <span id="done" class="label label-info"></span> <span id="i18n_tasks_from">tasks from</span>
@@ -46,14 +69,10 @@
         <div class="progress progress-striped">
             <div id="progress" rel="tooltip" title="#" class="progress-bar" style="width: 0%;"  role="progressbar"></div>
         </div>
-    </div><!-- End of Question and Submission DIV (column) -->
-    <div class="col-md-6"><!-- Start of Photo DIV (column) -->
-        <a id="photo-link" href="#">
-            <img id="photo" src="http://i.imgur.com/GeHxzb7.png" style="max-width=100%">
-        </a>
-    </div><!-- End of Photo DIV (columnt) -->
+    </div>
 </div><!-- End of Skeleton Row -->
 
+<script src="http://openlayers.org/en/v3.7.0/build/ol.js" type="text/javascript"></script>
 <script>
 // Update userLocale with server side information
  $(document).ready(function(){
@@ -81,7 +100,10 @@ pybossa.taskLoaded(function(task, deferred) {
             // continue as soon as the image is loaded
             deferred.resolve(task);
         });
-        img.attr('src', task.info.url_b).css('height', 460);
+        var key = quadKey([task.info.z, task.info.x, task.info.y]);
+        var url = "https://ecn.t2.tiles.virtualearth.net/tiles/a";
+        url += key + '.jpeg?g=3643';
+        img.attr('src', url).css('width', 512);
         img.addClass('img-thumbnail img-responsive');
         task.info.image = img;
     }
@@ -92,33 +114,93 @@ pybossa.taskLoaded(function(task, deferred) {
 
 pybossa.presentTask(function(task, deferred) {
     if ( !$.isEmptyObject(task) ) {
+        $('.btn-answer .fa-check').addClass('hidden');
+        $('.btn-answer').blur();
         loadUserProgress();
         $('#photo-link').html('').append(task.info.image);
         $("#photo-link").attr("href", task.info.link);
         //$("#question").html(task.info.question);
         $('#task-id').html(task.id);
         $('.btn-answer').off('click').on('click', function(evt) {
+            $(this).find('.fa-check').removeClass('hidden');
             var answer = $(this).attr("value");
-            if (typeof answer != 'undefined') {
-                //console.log(answer);
-                pybossa.saveTask(task.id, answer).done(function() {
-                    deferred.resolve();
-                });
-                $("#loading").fadeIn(500);
-            }
-            else {
-                $("#error").show();
-            }
+            window.setTimeout(function() {
+                if (typeof answer != 'undefined') {
+                    //console.log(answer);
+                    pybossa.saveTask(task.id, answer).done(function() {
+                        deferred.resolve();
+                    });
+                    $("#loading").fadeIn(500);
+                }
+                else {
+                    $("#error").show();
+                }
+            }, 800);
         });
+        // establish short-cuts for submission buttons
+
         $("#loading").hide();
+        taskLoaded = true;
     }
     else {
-        console.log("finish");
         $(".skeleton").hide();
         $("#loading").hide();
         $("#finish").fadeIn(500);
+        taskLoaded = false;
     }
 });
+
+var taskLoaded = true;
+$(document).keydown(function(e) {
+    if (!taskLoaded) {
+        return;
+    }
+    var option = null;
+    switch (e.keyCode) {
+        case 38:
+            option = 'yes';
+            break;
+        case 40:
+            option = 'no';
+            break;
+        case 32: 
+            option = 'bad';
+            break;
+    }
+    if (option) {
+        $('#submit-' + option).click();
+        $("#loading").show();
+        console.log (option);
+        return false;
+    }
+    return; //using "return" other attached events will execute
+});
+
+var QuadKeyCharCode = {
+  ZERO: '0'.charCodeAt(0),
+  ONE: '1'.charCodeAt(0),
+  TWO: '2'.charCodeAt(0),
+  THREE: '3'.charCodeAt(0)
+};
+
+function quadKey(tileCoord) {
+  var z = tileCoord[0];
+  var digits = new Array(z);
+  var mask = 1 << (z - 1);
+  var i, charCode;
+  for (i = 0; i < z; ++i) {
+    charCode = QuadKeyCharCode.ZERO;
+    if (tileCoord[1] & mask) {
+      charCode += 1;
+    }
+    if (tileCoord[2] & mask) {
+      charCode += 2;
+    }
+    digits[i] = String.fromCharCode(charCode);
+    mask >>= 1;
+  }
+  return digits.join('');
+};
 
 pybossa.run('bheka');
 </script>
