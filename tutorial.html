@@ -2,11 +2,17 @@
     <div class="col-md-12">
         <div id="modal" class="modal hide fade">
             <div class="modal-header">
-                <h3>Bheka Micro Tasking</h3>
+                <h3>Mapping the world!</h3>
             </div>
             <div id="0" class="modal-body" style="display:none">
+                Hi there!
+                <br/>
+                Thank you for helping HOT and Missing Maps create a complete map the world.
             </div>
             <div id="1" class="modal-body" style="display:none">
+                Your job if you accept it is to identify if there are buildings or roads to map.
+            </div>
+            <div id="2" class="modal-body" style="display:none">
                 <p>The application is really simple. It loads an aerial imagery piece and ask you this question: <strong>Do you see a building or a road in this photo?</strong></p>
                 <img src="" class="img-thumbnail"/>
                 <p>You will have 3 possible answers:
@@ -19,6 +25,63 @@
                 <p>
                 </p>
                 <p>All you have to do is to click in one of the three possible answers and you will be done. Other users (mappers) will use this information to map the buildings and the roads to complete the <a href="http://openstreetmap.org" target="_blank">OpenStreetMap</a> database.</p>
+            </div>
+            <div id="3" class="modal-body" style="display:none">
+                <p>
+                    Here's an example of imagery with no road nor buildings.
+                </p>
+                <p class="text-center">
+                    <img src="https://ecn.t0.tiles.virtualearth.net/tiles/a30010031313102222.jpeg?g=3643" />
+                    <br>
+                    <button class="btn btn-danger btn-answer" value='No'><i class="fa fa-thumbs-o-down"></i> No</button>
+                </p>
+            </div>
+            <div id="4" class="modal-body" style="display:none">
+                <p>
+                    Here's an example of imagery with settlments.
+                </p>
+                <p class="text-center">
+                    <img src="https://ecn.t3.tiles.virtualearth.net/tiles/a3001012021301220311.jpeg?g=3643" />
+                    <br>
+                    <button class="btn btn-success btn-answer" value='Yes'><i class="fa fa-thumbs-o-up"></i>Yes</button>
+                </p>
+            </div>
+            <div id="5" class="modal-body" style="display:none">
+                <p>
+                    Here's an example of imagery with a road.
+                </p>
+                <p class="text-center">
+                    <img src="https://ecn.t1.tiles.virtualearth.net/tiles/a3001012021301222030.jpeg?g=3643" />
+                    <br>
+                    <button class="btn btn-success btn-answer" value='Yes'><i class="fa fa-thumbs-o-up"></i>Yes</button>
+                </p>
+            </div>
+            <div id="6" class="modal-body" style="display:none">
+                <p>
+                    Here's an example of bad imagery.
+                </p>
+                <p class="text-center">
+                    <img src="https://ecn.t1.tiles.virtualearth.net/tiles/a300100313130033021.jpeg?g=3643" />
+                    <br>
+                    <button class="btn btn-answer" value='Bad'><i class="fa fa-exclamation"></i>No or Bad imagery</button>
+                </p>
+            </div>
+            <div id="7" class="modal-body" style="display:none">
+                <p>
+                    Here's an example of bad imagery.
+                </p>
+                <p class="text-center">
+                    <img src="https://ecn.t2.tiles.virtualearth.net/tiles/a300101202030132113.jpeg?g=3643" />
+                    <br>
+                    <button class="btn btn-answer" value='Bad'><i class="fa fa-exclamation"></i>No or Bad imagery</button>
+                </p>
+            </div>
+            <div id="8" class="modal-body" style="display:none">
+                <p>
+                    You're ready now!
+                    <br />
+                    Let's map the world!
+                </p>
             </div>
             <div class="modal-footer">
                 <a id="prevBtn" href="#" onclick="showStep('prev')" class="btn">Previous</a>
@@ -45,7 +108,7 @@
             $("#prevBtn").show();
         }
 
-        if (step == 1 ) {
+        if (step == 8 ) {
             $("#nextBtn").hide();
             $("#startContrib").show();
         }
